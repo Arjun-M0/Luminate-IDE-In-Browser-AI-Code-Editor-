@@ -162,6 +162,33 @@ const TemplateSelectionModel = ({isOpen, onClose, onSubmit}: TemplateSelectionMo
         }
     }
 
+    const handleBack = () => {
+      setStep("select");
+    }
+
+    const handleCreateProject = () => {
+      if(selectedTemplate){
+        const templateMap: Record<string, "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR"> = {
+          "react": "REACT",
+          "nextjs": "NEXTJS",
+          "express": "EXPRESS",
+          "vue": "VUE",
+          "hono": "HONO",
+          "angular": "ANGULAR",
+        };
+        const template = templates.find((t) => t.id === selectedTemplate);
+        onSubmit({
+          title: projectName || `New ${template?.name} Project`,
+          template: templateMap[selectedTemplate] || "REACT",
+          description: template?.description,
+        })
+      }
+      onClose();
+      setStep("select");
+      setSelectedTemplate(null);
+      setProjectName("");
+    }
+
     const renderStars = (count: number) => {
         return Array(5).fill(0).map((_, index) => (
             <Star key={index} size={14} className={index < count ? "text-yellow-400" : "text-gray-300"} />
@@ -339,8 +366,49 @@ const TemplateSelectionModel = ({isOpen, onClose, onSubmit}: TemplateSelectionMo
 
             ):(
                 <>
-                <p>Configure</p>
-                </>
+                <DialogHeader>
+                  <DialogTitle className="text-2xl font-bold text-[#E93F3F]">
+                      Configure Your Project
+                  </DialogTitle>
+                  <DialogDescription>
+                    {templates.find((template) => template.id === selectedTemplate)?.name} Project Configuration
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div className="flex flex-col gap-4 py-4">
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="project-name">Project Name</Label>
+                    <Input id="project-name" placeholder="Enter your project name" value={projectName} onChange={(e) => setProjectName(e.target.value)} />
+                  </div>
+
+                  <div className="p-4 shadow-[0_0_0_1px_#E93F3F,0_8px_20px_rgba(233,63,63,0.15)] rounded-lg border">
+                <h3 className="font-medium mb-2">Selected Template Features</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {templates
+                    .find((t) => t.id === selectedTemplate)
+                    ?.features.map((feature) => (
+                      <div key={feature} className="flex items-center gap-2">
+                        <Zap size={14} className="text-[#E93F3F]" />
+                        <span className="text-sm">{feature}</span>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-between gap-3 mt-4 pt-4 border-t">
+              <Button variant="outline" onClick={handleBack}>
+                Back
+              </Button>
+              <Button
+                className="bg-[#E93F3F] hover:bg-[#d03636]"
+                onClick={handleCreateProject}
+              >
+                Create Project
+              </Button>
+            </div>
+               
+              </>
             )
 
             }
