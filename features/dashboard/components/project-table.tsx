@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import type { Project } from "../types";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -78,19 +78,31 @@ export default function ProjectTable({projects,onDeleteProject,onUpdateProject,o
   const [favoutrie, setFavourite] = useState(false);
 
     const handleDuplicateProject = async(project:Project) => {
-    
+        if(!onDuplicateProject) return;
+        setIsLoading(true);
+        await onDuplicateProject(project.id);
+        toast.success("Project duplicated successfully!");
+        setIsLoading(false);
     }
 
     const handleEditClick = async(project: Project) => {
-    
+        setSelectedProject(project);
+        setEditData({
+            title: project.title,
+            description: project.description || "",
+        })
+        setEditDialogOpen(true);
     }
 
     const copyProjectUrl = async(projectId: string) => {
-
+        const url = `${window.location.origin}/playground/${projectId}`;
+        navigator.clipboard.writeText(url);
+        toast.success("Project URL copied to clipboard!");
     }
 
     const handleDeleteClick = async(project: Project) => {
-
+        setSelectedProject(project);
+        setDeleteDialogOpen(true);
     }
     
     return(
@@ -202,6 +214,71 @@ export default function ProjectTable({projects,onDeleteProject,onUpdateProject,o
           </TableBody>
         </Table>
       </div>
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Edit Project</DialogTitle>
+                    <DialogDescription>
+                        Update your project details here. Click save when you're done.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                    <div className="grid gap-2">
+                        <Label htmlFor="title">Title</Label>
+                        <Input
+                            id="title"
+                            value={editData.title}
+                            onChange={(e) => setEditData({...editData, title: e.target.value})}   
+                        />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="description">Description</Label>
+                        <Textarea
+                            id="description"
+                            value={editData.description}
+                            onChange={(e) => setEditData({...editData, description: e.target.value})}
+                        />
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button variant="outline" onClick={() => setEditDialogOpen(false)} disabled={isLoading}>Cancel</Button>
+                    <Button onClick={() => {
+                        if(onUpdateProject && selectedProject) {
+                            setIsLoading(true);
+                            onUpdateProject(selectedProject.id, editData);
+                        }
+                        setEditDialogOpen(false);
+                        setSelectedProject(null);
+                        toast.success("Project updated successfully!");
+                        setIsLoading(false);
+                    }}>Save</Button>
+                </DialogFooter>
+            </DialogContent>
+      </Dialog>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Are you sure you want to delete this project?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This action cannot be undone. This will permanently delete your project and all of its data.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel onClick={() => setDeleteDialogOpen(false)} disabled={isLoading}>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => {
+                        if(onDeleteProject && selectedProject) {
+                            setIsLoading(true);
+                            onDeleteProject(selectedProject.id);
+                        }
+                        setDeleteDialogOpen(false);
+                        setSelectedProject(null);
+                        toast.success("Project deleted successfully!");
+                        setIsLoading(false);
+                    }}>Delete</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+      </AlertDialog>
         </>
     )
 }
