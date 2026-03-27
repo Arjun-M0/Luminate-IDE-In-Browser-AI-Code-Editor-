@@ -4,7 +4,12 @@ import { toast } from "sonner";
 import { TemplateFile, TemplateFolder } from "../types";
 // import { SaveUpdatedCode } from "../actions";
 import { generateFileId } from "../lib";
-import { usePlayground } from "./usePlayground";
+
+type WebContainerInstance = {
+  fs?: {
+    mkdir: (path: string, options?: { recursive?: boolean }) => Promise<void>;
+  };
+};
 
 interface FileExplorerState {
   playgroundId: string;
@@ -26,13 +31,13 @@ interface FileExplorerState {
     newFile: TemplateFile,
     parentPath: string,
     writeFileSync: (filePath: string, content: string) => Promise<void>,
-    instance: any,
+    instance: WebContainerInstance | null,
     saveTemplateData: (data: TemplateFolder) => Promise<void>,
   ) => Promise<void>;
   handleAddFolder: (
     newFolder: TemplateFolder,
     parentPath: string,
-    instance: any,
+    instance: WebContainerInstance | null,
     saveTemplateData: (data: TemplateFolder) => Promise<void>,
   ) => Promise<void>;
   handleDeleteFile: (

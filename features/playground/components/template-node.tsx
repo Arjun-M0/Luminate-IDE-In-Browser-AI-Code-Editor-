@@ -131,7 +131,11 @@ const TemplateNode = ({
             <SidebarMenuItem
                 onClick={() => onFileSelect?.(file)}
                 style={{ paddingLeft: `${level * 1.5}rem` }}
-                className="flex items-center justify-between group"
+                className={`group flex cursor-pointer items-center justify-between rounded-md transition-colors ${
+                    isSelected
+                        ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                        : "hover:bg-sidebar-accent/60"
+                }`}
             >
                 <div className="flex items-center">
                     <File className="h-4 w-4 mr-2 shrink-0" />
@@ -168,7 +172,7 @@ const TemplateNode = ({
                     <AlertDialogHeader>
                         <AlertDialogTitle>Confirm Delete</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Are you sure you want to delete "{fileName}"? This action cannot be undone.
+                            Are you sure you want to delete &quot;{fileName}&quot;? This action cannot be undone.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -312,7 +316,7 @@ const TemplateNode = ({
                     <AlertDialogHeader>
                         <AlertDialogTitle>Confirm Delete</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Are you sure you want to delete "{folderName}"? This action cannot be undone.
+                            Are you sure you want to delete &quot;{folderName}&quot;? This action cannot be undone.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

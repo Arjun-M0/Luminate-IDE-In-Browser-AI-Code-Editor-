@@ -2,9 +2,6 @@
 import React from 'react'
 import {Button} from "@/components/ui/button";
 import {Plus} from "lucide-react";
-import Image from 'next/image';
-import {UseRouter} from 'next/navigation';
-import {UseState} from 'react';
 import { cn } from "@/lib/utils";
 
 const AddRepoButton = () => {

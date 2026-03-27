@@ -233,7 +233,16 @@ const TemplateSelectionModel = ({isOpen, onClose, onSubmit}: TemplateSelectionMo
                 <Tabs
                   defaultValue="all"
                   className="w-full sm:w-auto"
-                  onValueChange={(value) => setCategory(value as any)}
+                  onValueChange={(value) => {
+                    if (
+                      value === "all" ||
+                      value === "frontend" ||
+                      value === "backend" ||
+                      value === "fullstack"
+                    ) {
+                      setCategory(value);
+                    }
+                  }}
                 >
                   <TabsList className="grid grid-cols-4 w-full sm:w-[400px]">
                     <TabsTrigger value="all">All</TabsTrigger>

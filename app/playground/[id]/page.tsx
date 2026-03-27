@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import PlaygroundEditor from "@/features/playground/components/playground-editor";
 import { useParams } from "next/navigation";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
@@ -63,6 +64,16 @@ const Page = () => {
     setPlaygroundId,
     setOpenFiles,
   } = useFileExplorer();
+
+  useEffect(()=>{
+    setPlaygroundId(id);
+  },[id,setPlaygroundId])
+
+  useEffect(()=>{
+    if(templateData && !openFiles.length){
+      setTemplateData(templateData);
+    }
+  },[templateData, setTemplateData, openFile.length])
 
   const activeFile = openFiles.find((file) => file.id === activeFileId);
   const hasUnsavedChanges = openFiles.some((file) => file.hasUnsavedChanges);
@@ -190,9 +201,11 @@ const Page = () => {
                   </Tabs>
                 </div>
                 <div className="flex-1">
-                  {
-                    activeFile?.content || "No content to display"
-                  }
+                  <ResizablePanelGroup orientation="horizontal" className="h-full">
+                    <ResizablePanel defaultSize={isPreviewVisible?50:100}>
+                      <PlaygroundEditor/>
+                    </ResizablePanel>
+                  </ResizablePanelGroup>
                 </div>
               </div>
             ) : (

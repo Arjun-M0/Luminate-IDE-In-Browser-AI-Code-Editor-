@@ -56,9 +56,12 @@ import { toast } from "sonner";
 
 interface ProjectTableProps {
   projects: Project[];
-  onDeleteProject?: Function;
-  onUpdateProject?: Function;
-  onDuplicateProject?: Function;
+  onDeleteProject?: (projectId: string) => unknown | Promise<unknown>;
+  onUpdateProject?: (
+    projectId: string,
+    data: EditProjectData,
+  ) => unknown | Promise<unknown>;
+  onDuplicateProject?: (projectId: string) => unknown | Promise<unknown>;
 }
 
 interface EditProjectData {
@@ -147,7 +150,7 @@ export default function ProjectTable({projects,onDeleteProject,onUpdateProject,o
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm">{project.user.name}</span>
+                    <span className="text-sm">{project.user.name || "Unknown user"}</span>
                   </div>
                 </TableCell>
                 <TableCell>
@@ -219,7 +222,7 @@ export default function ProjectTable({projects,onDeleteProject,onUpdateProject,o
                 <DialogHeader>
                     <DialogTitle>Edit Project</DialogTitle>
                     <DialogDescription>
-                        Update your project details here. Click save when you're done.
+                      Update your project details here. Click save when you&apos;re done.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">

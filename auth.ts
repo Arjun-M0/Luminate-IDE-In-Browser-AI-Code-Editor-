@@ -30,7 +30,12 @@ export const { auth , handlers , signIn , signOut } = NextAuth({
                                 token_type: account.token_type,
                                 scope: account.scope,
                                 id_token: account.id_token,
-                                session_state: account.session_state,
+                                session_state:
+                                    typeof account.session_state === "string"
+                                        ? account.session_state
+                                        : account.session_state == null
+                                          ? null
+                                          : JSON.stringify(account.session_state),
                                 refresh_token: account.refresh_token,
                                 expires_at: account.expires_at,
                             },
@@ -61,7 +66,12 @@ export const { auth , handlers , signIn , signOut } = NextAuth({
                             token_type: account.token_type,
                             scope: account.scope,
                             id_token: account.id_token,
-                            session_state: account.session_state,
+                            session_state:
+                                typeof account.session_state === "string"
+                                    ? account.session_state
+                                    : account.session_state == null
+                                      ? null
+                                      : JSON.stringify(account.session_state),
                             refresh_token: account.refresh_token,
                             expires_at: account.expires_at,
                         },

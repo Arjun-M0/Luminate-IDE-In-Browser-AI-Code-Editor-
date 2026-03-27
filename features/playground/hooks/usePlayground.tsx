@@ -1,13 +1,12 @@
 import { useState , useCallback , useEffect } from "react";
 import { toast } from "sonner";
 import { TemplateFolder } from "../lib/path-to-json";
-import { set } from "date-fns";
 import { getPlaygroundById, saveUpdatedCode } from "../actions";
 
 interface PlaygroundData {
   id: string;
   title?: string;
-  [key:string]: any;
+  [key:string]: unknown;
 }
 
 interface UsePlaygroundReturn {
@@ -31,7 +30,7 @@ export const usePlayground = (id: string): UsePlaygroundReturn => {
             setIsLoading(true);
             setError(null);
             const data = await getPlaygroundById(id);
-            //@ts-ignore
+            // @ts-expect-error Server action returns a wider object than PlaygroundData.
             setPlaygroundData(data);
             const rawContent = data?.templateFiles?.[0]?.content;
             if(typeof rawContent === "string"){
@@ -81,7 +80,7 @@ export const usePlayground = (id: string): UsePlaygroundReturn => {
         console.error("Error saving template data:", error);
         toast.error("Failed to save template data");
       }
-    },[]);
+    },[id]);
 
     useEffect(()=>{
       loadPlayground();
