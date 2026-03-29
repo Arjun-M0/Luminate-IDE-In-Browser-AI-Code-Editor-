@@ -203,7 +203,11 @@ const Page = () => {
                 <div className="flex-1">
                   <ResizablePanelGroup orientation="horizontal" className="h-full">
                     <ResizablePanel defaultSize={isPreviewVisible?50:100}>
-                      <PlaygroundEditor/>
+                      <PlaygroundEditor
+                        activeFile={activeFile}
+                        content={activeFile?.content || ""}
+                        onContentChange={(value)=> activeFileId && updateFileContent(activeFileId, value)}
+                      />
                     </ResizablePanel>
                   </ResizablePanelGroup>
                 </div>
