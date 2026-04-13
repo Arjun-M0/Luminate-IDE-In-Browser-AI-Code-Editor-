@@ -55,11 +55,6 @@ const DashboardSidebar = ({initialPlaygroundData}: {initialPlaygroundData: Playg
 
     return (
     <Sidebar variant='inset'collapsible='icon' className='border-1 border-r'>
-        <SidebarHeader>
-            <div className='flex items-center gap-2 px-4 py-3 justify-center'>
-                <Image src={"/logo.svg"} alt='Logo' width={60} height={60}/>
-            </div>
-        </SidebarHeader>
         <SidebarContent>
             <SidebarGroup>
                 <SidebarMenu>
